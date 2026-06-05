@@ -33,6 +33,7 @@ sudo python3 stp_root_attack.py
 sudo python3 stp_root_attack.py -i eth1
 sudo python3 stp_root_attack.py --priority 0 --interval 1.0
 ```
+![Texto alternativo](https://github.com/DarkyGhost107/network-security-stp-root-attack/blob/main/screenshots/ejemplo%20stp%20claim%20root.png)
 
 ## 4. Requisitos
 
@@ -66,26 +67,7 @@ Estructura del BPDU malicioso:
 - hellotime: 2, maxage: 20, fwddelay: 15
 
 ## 6. Topologia de Red (GNS3)
-
-```
-                    +─────────────────+
-                    |   SW-A (ROOT)   | <- Root Bridge legitimo ANTES
-                    | Prioridad 4096   |
-                    +────────+────────+
-                             |
-              +──────────────+──────────────+
-              |                             |
-     +────────+────────+           +────────+────────+
-     |      SW-B       |           |      SW-C       |
-     | Prioridad 32768 |           | Prioridad 32768 |
-     +────────+────────+           +-────────────────+
-              |
-     +────────+────────+
-     |   ATACANTE       | <- Envia BPDUs con prioridad 0
-     | Kali Linux        |    Se convierte en nuevo Root
-     | Prioridad 0       |    Todo el trafico pasa aqui
-     +-─────────────────+
-```
+![Texto alternativo](https://github.com/DarkyGhost107/network-security-stp-root-attack/blob/main/screenshots/topologia%20stp%20claim%20root.png)
 
 ### Direccionamiento
 
@@ -100,16 +82,11 @@ Estructura del BPDU malicioso:
 
 Coloca tus capturas en `screenshots/`:
 - `screenshots/stp_before.png` - Topologia STP antes del ataque
-- `screenshots/stp_attack_running.png` - Script enviando BPDUs
+- ![Texto alternativo](https://github.com/DarkyGhost107/network-security-stp-root-attack/blob/main/screenshots/show%20stp%20sw-a.png)
+- ![Texto alternativo](https://github.com/DarkyGhost107/network-security-stp-root-attack/blob/main/screenshots/show%20stp%20sw-b.png)
 - `screenshots/stp_root_changed.png` - Nuevo Root Bridge (atacante)
-- `screenshots/stp_convergence.png` - Reconvergencia en switches
-- `screenshots/wireshark_bpdu.png` - Wireshark capturando BPDUs
+- ![Texto alternativo](https://github.com/DarkyGhost107/network-security-stp-root-attack/blob/main/screenshots/show%20stp%20script.png)
 
-```cisco
-show spanning-tree
-show spanning-tree summary
-show spanning-tree detail | include topology
-```
 
 ## 8. Contramedidas
 
@@ -128,19 +105,17 @@ spanning-tree vlan 1 priority 0
 interface range GigabitEthernet0/1 - 24
  spanning-tree bpduguard enable
  spanning-tree portfast
-
-! Root Guard en puertos de distribucion
-interface GigabitEthernet0/25
- spanning-tree guard root
-
-show spanning-tree inconsistentports
 ```
 
+![Texto alternativo](https://github.com/DarkyGhost107/network-security-stp-root-attack/blob/main/screenshots/contramedida%20stp%20claim%20root.png)
+![Texto alternativo](https://github.com/DarkyGhost107/network-security-stp-root-attack/blob/main/screenshots/contramedida%20hecha.png)
 ## 9. Referencias
 
 - [MITRE ATT&CK T1557 - Adversary-in-the-Middle](https://attack.mitre.org/techniques/T1557/)
 - [IEEE 802.1D - Spanning Tree Protocol](https://standards.ieee.org/ieee/802.1D/6847/)
 - [Cisco STP Security Best Practices](https://www.cisco.com/c/en/us/support/docs/lan-switching/spanning-tree-protocol/24062-146.html)
 
+## 10.Enlaces
+Video:https://youtu.be/gX00LGgcJFY
 ---
 *Laboratorio de Seguridad de Redes | GNS3 | Uso educativo exclusivo*
